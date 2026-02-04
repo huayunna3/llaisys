@@ -13,6 +13,7 @@ from .tensor import llaisysTensor_t
 from .tensor import load_tensor
 from .ops import load_ops
 
+from . import qwen2
 
 def load_shared_library():
     lib_dir = Path(__file__).parent
@@ -39,6 +40,7 @@ load_runtime(LIB_LLAISYS)
 load_tensor(LIB_LLAISYS)
 load_ops(LIB_LLAISYS)
 
+qwen2.init_qwen2_functions(LIB_LLAISYS)
 
 __all__ = [
     "LIB_LLAISYS",
@@ -52,4 +54,5 @@ __all__ = [
     "llaisysMemcpyKind_t",
     "MemcpyKind",
     "llaisysStream_t",
+    "qwen2",
 ]
