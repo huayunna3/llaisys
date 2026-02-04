@@ -6,6 +6,25 @@ namespace llaisys {
 class Tensor;
 using tensor_t = std::shared_ptr<Tensor>;
 
+// 张量操作接口
+tensor_t tensor_create(const size_t* shape, size_t ndim, 
+                      llaisysDataType_t dtype, llaisysDeviceType_t device);
+void tensor_release(tensor_t tensor);
+void tensor_retain(tensor_t tensor);
+void tensor_load(tensor_t tensor, const void* data);
+std::byte* tensor_data(tensor_t tensor);
+size_t tensor_numel(tensor_t tensor);
+size_t tensor_elementSize(tensor_t tensor);
+size_t tensor_ndim(tensor_t tensor);
+const size_t* tensor_shape(tensor_t tensor);
+llaisysDataType_t tensor_dtype(tensor_t tensor);
+llaisysDeviceType_t tensor_deviceType(tensor_t tensor);
+
+// 张量操作函数
+void tensor_concat(tensor_t dst, tensor_t src1, tensor_t src2, size_t dim);
+tensor_t tensor_slice(tensor_t src, size_t dim, size_t start, size_t end);
+
+
 struct TensorMeta {
     llaisysDataType_t dtype;
     std::vector<size_t> shape;

@@ -95,6 +95,28 @@ target("llaisys-ops")
     on_install(function (target) end)
 target_end()
 
+-- Qwen2模型模块（添加在文件末尾，target("llaisys")之前）
+target("llaisys-models")
+    set_kind("static")
+    add_deps("llaisys-ops")
+    add_deps("llaisys-tensor")
+    add_deps("llaisys-core")
+
+    set_languages("cxx17")
+    set_warnings("all", "error")
+    if not is_plat("windows") then
+        add_cxflags("-fPIC", "-Wno-unknown-pragmas")
+    end
+
+    -- 添加模型实现文件
+    add_files("src/llaisys/qwen2.cpp")
+    -- 如果有其他模型文件也可以在这里添加
+    -- add_files("src/llaisys/models/*.cpp")
+
+    on_install(function (target) end)
+target_end()
+
+
 target("llaisys")
     set_kind("shared")
     add_deps("llaisys-utils")
@@ -102,6 +124,7 @@ target("llaisys")
     add_deps("llaisys-core")
     add_deps("llaisys-tensor")
     add_deps("llaisys-ops")
+    add_deps("llaisys-models")
 
     set_languages("cxx17")
     set_warnings("all", "error")
