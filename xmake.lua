@@ -109,7 +109,7 @@ target("llaisys-models")
     end
 
     -- 添加模型实现文件
-    add_files("src/llaisys/qwen2.cpp")
+    add_files("src/llaisys/qwen2.cc")
     -- 如果有其他模型文件也可以在这里添加
     -- add_files("src/llaisys/models/*.cpp")
 
