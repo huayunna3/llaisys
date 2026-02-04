@@ -1,38 +1,9 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Qwen2模型C API的ctypes封装
-"""
-
 from ctypes import *
-import numpy as np
-import sys
 import os
+import sys
 
 # 导入主库
 from . import LIB_LLAISYS
-
-# ========== 数据类型映射 ==========
-def llaisys_dtype_to_numpy(dtype):
-    """将LLAISYS数据类型转换为numpy数据类型"""
-    dtype_map = {
-        0: np.float32,   # LLAISYS_DTYPE_F32
-        1: np.float16,   # LLAISYS_DTYPE_F16
-        2: np.float16,   # LLAISYS_DTYPE_BF16 (近似)
-        3: np.int64,     # LLAISYS_DTYPE_I64
-    }
-    return dtype_map.get(dtype, np.float32)
-
-def numpy_to_llaisys_dtype(np_dtype):
-    """将numpy数据类型转换为LLAISYS数据类型"""
-    if np_dtype == np.float32:
-        return 0  # LLAISYS_DTYPE_F32
-    elif np_dtype == np.float16:
-        return 1  # LLAISYS_DTYPE_F16
-    elif np_dtype == np.int64:
-        return 3  # LLAISYS_DTYPE_I64
-    else:
-        return 0  # 默认float32
 
 # ========== C结构体定义 ==========
 class LlaisysQwen2Meta(Structure):
@@ -106,17 +77,17 @@ def init_qwen2_functions():
     
     # 推理接口
     LIB_LLAISYS.llaisysQwen2Forward.argtypes = [
-        c_void_p,      # model
+        c_void_p,          # model
         POINTER(c_int64),  # token_ids
-        c_size_t,      # ntoken
-        c_size_t       # past_len
+        c_size_t,          # ntoken
+        c_size_t           # past_len
     ]
     LIB_LLAISYS.llaisysQwen2Forward.restype = c_void_p  # tensor_t
     
     LIB_LLAISYS.llaisysQwen2ModelInfer.argtypes = [
-        c_void_p,      # model
+        c_void_p,          # model
         POINTER(c_int64),  # token_ids
-        c_size_t       # ntoken
+        c_size_t           # ntoken
     ]
     LIB_LLAISYS.llaisysQwen2ModelInfer.restype = c_int64
     
@@ -129,29 +100,6 @@ def init_qwen2_functions():
     
     print("✅ Qwen2 C functions initialized")
 
-# ========== Python辅助类 ==========
-class Qwen2Tensor:
-    """Python中包装LLAISYS张量"""
-    def __init__(self, tensor_ptr, shape=None, dtype=None):
-        self.ptr = tensor_ptr
-        self.shape = shape
-        self.dtype = dtype
-    
-    def numpy(self):
-        """将张量转换为numpy数组（简化版）"""
-        if not self.ptr:
-            return None
-        
-        # 这里需要调用C函数获取张量数据
-        # 简化实现：假设可以通过其他方式获取
-        return None
-    
-    def __del__(self):
-        if self.ptr:
-            # 释放张量
-            pass
-
-# ========== 初始化函数 ==========
 # 在模块导入时初始化
 init_qwen2_functions()
 
@@ -159,8 +107,5 @@ init_qwen2_functions()
 __all__ = [
     'LlaisysQwen2Meta',
     'LlaisysQwen2Weights',
-    'init_qwen2_functions',
-    'Qwen2Tensor',
-    'llaisys_dtype_to_numpy',
-    'numpy_to_llaisys_dtype'
+    'init_qwen2_functions'
 ]
